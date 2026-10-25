@@ -33,6 +33,9 @@ wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
 
 [features]
-default = ["gpui-pre"]
+svg-text = ["gpui-fast?/svg-text"]
+svg-raster = ["gpui-fast?/svg-raster"]
+image-formats = ["gpui-fast?/image-formats"]
+default = ["svg-text", "svg-raster", "image-formats", "gpui-pre"]
 gpui-pre = ["dep:gpui"]
 gpui-fast = ["dep:gpui-fast"]

@@ -25,7 +25,10 @@ name = "text_view_scroll"
 harness = false
 
 [features]
-default = ["gpui-pre", "rich-text"]
+svg-text = ["gpui-fast?/svg-text"]
+svg-raster = ["gpui-fast?/svg-raster"]
+image-formats = ["gpui-fast?/image-formats"]
+default = ["svg-text", "svg-raster", "image-formats", "gpui-pre", "rich-text"]
 rich-text = ["dep:markdown", "dep:html5ever", "dep:markup5ever_rcdom", "dep:data-url"]
 gpui-pre = ["dep:gpui"]
 gpui-fast = ["dep:gpui-fast"]

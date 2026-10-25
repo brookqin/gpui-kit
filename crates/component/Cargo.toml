@@ -15,7 +15,10 @@ edition.workspace = true
 doctest = false
 
 [features]
-default = ["gpui-pre", "rich-text"]
+svg-text = ["gpui-fast?/svg-text"]
+svg-raster = ["gpui-fast?/svg-raster"]
+image-formats = ["gpui-fast?/image-formats"]
+default = ["svg-text", "svg-raster", "image-formats", "gpui-pre", "rich-text"]
 rich-text = ["gpui-base/rich-text", "dep:markdown"]
 gpui-pre = ["dep:gpui", "gpui-base/gpui-pre", "gpui-kit-assets/gpui-pre"]
 gpui-fast = ["dep:gpui-fast", "gpui-base/gpui-fast", "gpui-kit-assets/gpui-fast"]
