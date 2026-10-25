@@ -44,6 +44,9 @@
 //!
 //! See [`component`] for the same program with the styled component library.
 
+#[cfg(not(any(feature = "gpui-fast", feature = "gpui-pre")))]
+compile_error!("Select the gpui-fast or gpui-pre engine feature");
+
 /// Defines unit actions without requiring consumers to depend on GPUI under the
 /// crate name `gpui`.
 ///

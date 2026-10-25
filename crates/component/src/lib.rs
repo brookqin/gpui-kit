@@ -1,3 +1,6 @@
+#[cfg(not(any(feature = "gpui-fast", feature = "gpui-pre")))]
+compile_error!("Select the gpui-fast or gpui-pre engine feature");
+
 #[cfg(feature = "gpui-fast")]
 extern crate gpui_fast as gpui;
 

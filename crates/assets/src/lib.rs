@@ -4,6 +4,9 @@
 //! [`Assets`] for the default component bundle, or [`AllAssets`] for the full
 //! catalog. Applications can provide their own source for additional icons.
 
+#[cfg(not(any(feature = "gpui-fast", feature = "gpui-pre")))]
+compile_error!("Select the gpui-fast or gpui-pre engine feature");
+
 #[cfg(feature = "gpui-fast")]
 extern crate gpui_fast as gpui;
 #[cfg(all(feature = "gpui-fast", test))]
