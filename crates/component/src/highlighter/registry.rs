@@ -799,3 +799,5 @@ mod tests {
         assert_eq!(highlighter.language().as_ref(), "__dynamic_factory_only__");
     }
 }
+
+include!("builtin_registry.rs");

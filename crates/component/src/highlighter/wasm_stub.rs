@@ -547,3 +547,5 @@ mod registry_compat_tests {
         assert_eq!(registry.editing_language_name("pyi"), "python");
     }
 }
+
+include!("builtin_wasm_stub.rs");

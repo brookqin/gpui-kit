@@ -1,7 +1,9 @@
-use crate::{Theme, ThemeColor, ThemeConfig, ThemeMode, ThemeSet, highlighter::HighlightTheme};
+use crate::{Theme, ThemeColor, ThemeConfig, ThemeMode, highlighter::HighlightTheme};
 #[allow(unused)]
 use anyhow::Result;
 use gpui::{App, Global, SharedString};
+#[cfg(feature = "theme-loader")]
+use crate::ThemeSet;
 use std::{
     collections::HashMap,
     path::PathBuf,
@@ -9,15 +11,13 @@ use std::{
     sync::{Arc, LazyLock},
 };
 
-const DEFAULT_THEME: &str = include_str!("./default-theme.json");
+use super::schema::builtin_themes;
 pub(crate) static DEFAULT_THEME_COLORS: LazyLock<
     HashMap<ThemeMode, (Arc<ThemeColor>, Arc<HighlightTheme>)>,
 > = LazyLock::new(|| {
     let mut colors = HashMap::new();
 
-    let themes: Vec<ThemeConfig> = serde_json::from_str::<ThemeSet>(DEFAULT_THEME)
-        .expect("Failed to parse themes/default.json")
-        .themes;
+    let themes = builtin_themes();
 
     for theme in themes {
         let mut theme_color = ThemeColor::default();
@@ -77,6 +77,7 @@ pub struct ThemeRegistry {
     themes_dir: PathBuf,
     default_themes: HashMap<ThemeMode, Rc<ThemeConfig>>,
     themes: HashMap<SharedString, Rc<ThemeConfig>>,
+    #[cfg(feature = "theme-loader")]
     has_custom_themes: bool,
 }
 
@@ -94,7 +95,7 @@ impl ThemeRegistry {
     /// Watch themes directory.
     ///
     /// And reload themes to trigger the `on_load` callback.
-    #[cfg(not(target_family = "wasm"))]
+    #[cfg(all(feature = "theme-loader", not(target_family = "wasm")))]
     pub fn watch_dir<F>(themes_dir: PathBuf, cx: &mut App, on_load: F) -> Result<()>
     where
         F: Fn(&mut App) + 'static,
@@ -148,6 +149,7 @@ impl ThemeRegistry {
         &self.default_themes[&ThemeMode::Dark]
     }
 
+    #[cfg(feature = "theme-loader")]
     pub fn load_themes_from_str(&mut self, content: &str) -> anyhow::Result<()> {
         let theme_set = serde_json::from_str::<ThemeSet>(content)?;
         for theme in theme_set.themes {
@@ -161,9 +163,7 @@ impl ThemeRegistry {
     }
 
     fn init_default_themes(&mut self) {
-        let default_themes: Vec<ThemeConfig> = serde_json::from_str::<ThemeSet>(DEFAULT_THEME)
-            .expect("failed to parse default theme.")
-            .themes;
+        let default_themes = builtin_themes();
         for theme in default_themes.into_iter() {
             if theme.mode.is_dark() {
                 self.default_themes.insert(ThemeMode::Dark, Rc::new(theme));
@@ -182,7 +182,7 @@ impl ThemeRegistry {
             .collect();
     }
 
-    #[cfg(not(target_family = "wasm"))]
+    #[cfg(all(feature = "theme-loader", not(target_family = "wasm")))]
     fn _watch_themes_dir(themes_dir: PathBuf, cx: &mut App) -> anyhow::Result<()> {
         use notify::Watcher as _;
 
@@ -231,7 +231,7 @@ impl ThemeRegistry {
         Ok(())
     }
 
-    #[cfg(not(target_family = "wasm"))]
+    #[cfg(all(feature = "theme-loader", not(target_family = "wasm")))]
     fn reload_themes(cx: &mut App) {
         let registry = Self::global_mut(cx);
         match registry.reload() {
@@ -242,7 +242,7 @@ impl ThemeRegistry {
         }
     }
 
-    #[cfg(not(target_family = "wasm"))]
+    #[cfg(all(feature = "theme-loader", not(target_family = "wasm")))]
     /// Reload themes from the `themes_dir`.
     fn reload(&mut self) -> Result<()> {
         let mut themes = vec![];
@@ -292,5 +292,14 @@ impl ThemeRegistry {
         }
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod builtin_theme_tests {
+    #[test]
+    fn typed_themes_match_json_on_this_backend() {
+        let original: crate::ThemeSet = serde_json::from_str(include_str!("default-theme.json")).unwrap();
+        assert_eq!(serde_json::to_value(super::builtin_themes()).unwrap(), serde_json::to_value(original.themes).unwrap());
     }
 }

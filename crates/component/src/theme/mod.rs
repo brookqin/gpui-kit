@@ -666,6 +666,7 @@ impl Theme {
     }
 
     /// Parses and applies a standalone `{ "tokens": ... }` semantic theme file.
+    #[cfg(feature = "theme-loader")]
     pub fn apply_semantic_config_str(
         &mut self,
         content: &str,

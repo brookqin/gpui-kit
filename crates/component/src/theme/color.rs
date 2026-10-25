@@ -343,11 +343,17 @@ impl Colorize for Hsla {
     }
 }
 
-pub(crate) static DEFAULT_COLORS: once_cell::sync::Lazy<ShadcnColors> =
-    once_cell::sync::Lazy::new(|| {
-        serde_json::from_str(include_str!("./default-colors.json"))
-            .expect("failed to parse default-colors.json")
-    });
+include!("builtin_palette.rs");
+pub(crate) static DEFAULT_COLORS: once_cell::sync::Lazy<ShadcnColors> = once_cell::sync::Lazy::new(builtin_palette);
+
+#[cfg(test)]
+mod builtin_palette_tests {
+    #[test]
+    fn typed_palette_matches_json() {
+        let original: super::ShadcnColors = serde_json::from_str(include_str!("default-colors.json")).unwrap();
+        assert_eq!(super::builtin_palette(), original);
+    }
+}
 
 type ColorScales = HashMap<usize, ShadcnColor>;
 

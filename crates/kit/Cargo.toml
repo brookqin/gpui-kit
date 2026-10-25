@@ -16,10 +16,11 @@ edition.workspace = true
 workspace = true
 
 [features]
+theme-loader = ["gpui-component?/theme-loader"]
 svg-text = ["gpui-fast?/svg-text"]
 svg-raster = ["gpui-fast?/svg-raster"]
 image-formats = ["gpui-fast?/image-formats"]
-default = ["svg-text", "svg-raster", "image-formats", "component", "assets", "gpui-pre", "webgpu", "webgl", "multithreaded", "rich-text"]
+default = ["theme-loader", "svg-text", "svg-raster", "image-formats", "component", "assets", "gpui-pre", "webgpu", "webgl", "multithreaded", "rich-text"]
 rich-text = ["gpui-base/rich-text", "gpui-component?/rich-text"]
 gpui-pre = ["dep:gpui", "dep:gpui_platform", "dep:gpui_web", "gpui-base/gpui-pre", "gpui-component?/gpui-pre", "gpui-kit-assets?/gpui-pre"]
 webgpu = ["gpui-fast-platform?/webgpu", "gpui-fast-web?/webgpu"]

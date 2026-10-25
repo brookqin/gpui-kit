@@ -15,10 +15,11 @@ edition.workspace = true
 doctest = false
 
 [features]
+theme-loader = ["dep:notify"]
 svg-text = ["gpui-fast?/svg-text"]
 svg-raster = ["gpui-fast?/svg-raster"]
 image-formats = ["gpui-fast?/image-formats"]
-default = ["svg-text", "svg-raster", "image-formats", "gpui-pre", "rich-text"]
+default = ["theme-loader", "svg-text", "svg-raster", "image-formats", "gpui-pre", "rich-text"]
 rich-text = ["gpui-base/rich-text", "dep:markdown"]
 gpui-pre = ["dep:gpui", "gpui-base/gpui-pre", "gpui-kit-assets/gpui-pre"]
 gpui-fast = ["dep:gpui-fast", "gpui-base/gpui-fast", "gpui-kit-assets/gpui-fast"]
@@ -135,7 +136,7 @@ gpui_macros.workspace = true
 gpui-base.workspace = true
 gpui-component-macros = { workspace = true }
 gpui-kit-assets = { workspace = true }
-notify.workspace = true
+notify = { workspace = true, optional = true }
 ropey.workspace = true
 rust-i18n.workspace = true
 schemars.workspace = true

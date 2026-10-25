@@ -1148,7 +1148,10 @@ mod tests {
         assert_eq!(semantic.typography.md.line_height, Some(22.0));
 
         let mut theme = Theme::default();
+        #[cfg(feature = "theme-loader")]
         let resolved = theme.apply_semantic_config_str(&serialized).unwrap();
+        #[cfg(not(feature = "theme-loader"))]
+        let resolved = theme.apply_semantic_config(&semantic);
         assert_eq!(theme.primary, try_parse_color("#2563eb").unwrap());
         assert_eq!(resolved.spacing.xl, px(24.));
         assert_eq!(resolved.typography.md.line_height, px(22.));
@@ -1359,3 +1362,5 @@ mod tests {
         );
     }
 }
+
+include!("builtin_themes.rs");
