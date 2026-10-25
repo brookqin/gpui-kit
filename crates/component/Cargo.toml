@@ -15,24 +15,25 @@ edition.workspace = true
 doctest = false
 
 [features]
+code-editor = ["dep:lsp-types"]
 theme-loader = ["dep:notify"]
 svg-text = ["gpui-fast?/svg-text"]
 svg-raster = ["gpui-fast?/svg-raster"]
 image-formats = ["gpui-fast?/image-formats"]
-default = ["theme-loader", "svg-text", "svg-raster", "image-formats", "gpui-pre", "rich-text"]
+default = ["code-editor", "theme-loader", "svg-text", "svg-raster", "image-formats", "gpui-pre", "rich-text"]
 rich-text = ["gpui-base/rich-text", "dep:markdown"]
 gpui-pre = ["dep:gpui", "gpui-base/gpui-pre", "gpui-kit-assets/gpui-pre"]
 gpui-fast = ["dep:gpui-fast", "gpui-base/gpui-fast", "gpui-kit-assets/gpui-fast"]
 test-support = ["gpui?/test-support", "gpui-base/test-support", "gpui-fast?/test-support"]
 decimal = ["gpui-base/decimal"]
-inspector = ["gpui_macros/inspector", "gpui?/inspector", "gpui-base/inspector", "gpui-fast?/inspector"]
-tree-sitter = ["dep:tree-sitter", "dep:tree-sitter-json"]
+inspector = ["code-editor","gpui_macros/inspector", "gpui?/inspector", "gpui-base/inspector", "gpui-fast?/inspector"]
+tree-sitter = ["code-editor","dep:tree-sitter", "dep:tree-sitter-json"]
 # Syntax highlighting for Markdown, Input and Diff from syntect and bat's
 # syntax collection: about 200 languages for a few megabytes, against tens for
 # the full tree-sitter set. Regex-based and line-oriented, so it has no syntax
 # tree: no structural folding and no syntax-aware editing. When both are
 # enabled, `tree-sitter` is used.
-syntect = ["dep:syntect", "dep:two-face"]
+syntect = ["code-editor","dep:syntect", "dep:two-face"]
 # Speech input: microphone capture and the system speech recognizer.
 speech = [
     "dep:cpal",
@@ -162,7 +163,7 @@ num-traits = "0.2"
 chrono = "0.4.38"
 
 # Code Editor
-lsp-types.workspace = true
+lsp-types = { workspace = true, optional = true }
 # The `syntect` highlighter, portable to WASM.
 syntect = { workspace = true, optional = true }
 two-face = { workspace = true, optional = true }

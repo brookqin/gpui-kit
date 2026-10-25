@@ -5,7 +5,9 @@ pub use gpui_base::input::{
 };
 pub(crate) use language_name::language_name;
 
+#[cfg(feature = "code-editor")]
 mod diagnostic_styles;
+#[cfg(feature = "code-editor")]
 pub(crate) use diagnostic_styles::*;
 
 #[cfg(feature = "tree-sitter")]
@@ -19,7 +21,7 @@ mod syntect_backend;
 #[cfg(all(feature = "syntect", not(feature = "tree-sitter")))]
 pub(crate) use syntect_backend::{highlight_code, input_highlighter_factory};
 
-#[cfg(not(any(feature = "tree-sitter", feature = "syntect")))]
+#[cfg(all(feature = "code-editor", not(any(feature = "tree-sitter", feature = "syntect"))))]
 pub(crate) fn input_highlighter_factory() -> gpui_base::input::InputHighlighterFactory {
     std::rc::Rc::new(|_| None)
 }

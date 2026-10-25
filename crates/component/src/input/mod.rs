@@ -7,12 +7,15 @@ pub use gpui_base::input::{
     InlineTokenHoverEvent, InlineTokenSpan, InputContent,
 };
 pub use token::InputToken;
+#[cfg(feature = "code-editor")]
 pub mod language_config;
 mod number_input;
 mod otp_input;
 mod overlay;
+#[cfg(feature = "code-editor")]
 pub(crate) mod popovers;
 mod search;
+#[cfg(feature = "code-editor")]
 mod syntax_context;
 
 pub(crate) use clear_button::*;
@@ -26,25 +29,29 @@ pub use gpui_base::input::{
     Backspace, BufferPoint, CodeActionItem, CodeActionProvider, CompletionHighlighter,
     CompletionMenuOptions, CompletionProvider, Copy, Cut, DefinitionProvider, Delete,
     DeleteToBeginningOfLine, DeleteToEndOfLine, DeleteToNextWordEnd, DeleteToPreviousWordStart,
-    DisplayMap, DisplayPoint, DocumentColorProvider, DocumentRangeSemanticTokensProvider,
-    EditorState, Enter, Escape, FoldRange, GoToDefinition, HighlightStyleResolver,
-    HoverPopoverState, HoverProvider, Indent, IndentInline, InputEdit, InputEvent,
-    InputHighlighter, InputHighlighterFactory, InputState, Lsp, MaskPattern, MoveDown, MoveEnd,
-    MoveHome, MoveLeft, MovePageDown, MovePageUp, MoveRight, MoveToEnd, MoveToEndOfLine,
-    MoveToNextWord, MoveToPreviousWord, MoveToStart, MoveToStartOfLine, MoveUp, Outdent,
-    OutdentInline, Paste, Point, PrepaintCaretGeometry, RangeDecoration, RangeDecorationCollection,
-    RangeDecorationStyle, Redo, Replace, Rope, RopeExt, RopeLines, Search, SelectAll, SelectToEnd,
-    SelectToEndOfLine, SelectToNextWordEnd, SelectToPreviousWordStart, SelectToStart,
-    SelectToStartOfLine, Selection, ShowCharacterPalette, ShowCompletions, ShowDocumentHandler,
-    TabSize, TextDecoration, TextDecorationCollection, TextareaState, ToggleCodeActions, Undo,
-    WrappingIndent, highlight_characters, highlight_contains, highlight_prefix,
+    DisplayMap, DisplayPoint, DocumentColorProvider, DocumentRangeSemanticTokensProvider, Enter,
+    Escape, FoldRange, GoToDefinition, HighlightStyleResolver, HoverPopoverState, HoverProvider,
+    Indent, IndentInline, InputEdit, InputEvent, InputHighlighter, InputHighlighterFactory,
+    InputState, Lsp, MaskPattern, MoveDown, MoveEnd, MoveHome, MoveLeft, MovePageDown, MovePageUp,
+    MoveRight, MoveToEnd, MoveToEndOfLine, MoveToNextWord, MoveToPreviousWord, MoveToStart,
+    MoveToStartOfLine, MoveUp, Outdent, OutdentInline, Paste, Point, PrepaintCaretGeometry,
+    RangeDecoration, RangeDecorationCollection, RangeDecorationStyle, Redo, Replace, Rope, RopeExt,
+    RopeLines, Search, SelectAll, SelectToEnd, SelectToEndOfLine, SelectToNextWordEnd,
+    SelectToPreviousWordStart, SelectToStart, SelectToStartOfLine, Selection, ShowCharacterPalette,
+    ShowCompletions, ShowDocumentHandler, TabSize, TextDecoration, TextDecorationCollection,
+    TextareaState, ToggleCodeActions, Undo, WrappingIndent, highlight_characters,
+    highlight_contains, highlight_prefix,
 };
-pub use gpui_base::input::{EditorMode, InputMode, InputModeKind, TextareaMode};
+#[cfg(feature = "code-editor")]
+pub use gpui_base::input::{EditorMode, EditorState};
+pub use gpui_base::input::{InputMode, InputModeKind, TextareaMode};
 #[doc(hidden)]
+#[cfg(feature = "code-editor")]
 mod editor;
 mod group;
 mod state;
 mod textarea;
+#[cfg(feature = "code-editor")]
 pub use editor::Editor;
 pub use gpui_base::input::{
     AutoClosingPair, BracketPair, IndentationRules, LanguageProvider, SyntaxContext,
@@ -52,12 +59,13 @@ pub use gpui_base::input::{
 };
 pub use group::*;
 pub use input::*;
-pub use lsp_types::Position;
+pub use gpui_base::input::Position;
 pub use number_input::{NumberInput, NumberInputEvent, NumberStep, StepAction};
 pub use otp_input::*;
 pub use state::AnyInputState;
 pub use textarea::Textarea;
 
+#[cfg(feature = "code-editor")]
 pub(crate) fn init(cx: &mut gpui::App) {
     language_config::init(cx);
 }

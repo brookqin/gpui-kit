@@ -1,14 +1,14 @@
 use std::collections::HashMap;
+#[cfg(feature = "code-editor")]
 use std::rc::Rc;
 
 use gpui::{AnyElement, App, Entity, EntityId, Global, IntoElement, WeakEntity, Window};
 use ropey::Rope;
 
-use super::{
-    InputBaseState, InputModeKind,
-    popovers::{CodeActionMenu, CompletionMenu, DiagnosticPopover, HoverPopover},
-    search::SearchPanel,
-};
+#[cfg(feature = "code-editor")]
+use super::popovers::{CodeActionMenu, CompletionMenu, DiagnosticPopover, HoverPopover};
+use super::{InputBaseState, InputModeKind, search::SearchPanel};
+#[cfg(feature = "code-editor")]
 use gpui_base::input::CompletionHighlighter;
 
 struct InputOverlayRegistry<M: OverlayMode> {
@@ -29,6 +29,7 @@ struct InputOverlayHost<M: OverlayMode> {
     search: Entity<SearchPanel<M>>,
     search_signature: SearchSignature,
     /// The language-feature popovers. Only a code editor has them.
+    #[cfg(feature = "code-editor")]
     lsp: Option<LspOverlays>,
 }
 
@@ -56,6 +57,7 @@ struct SearchSignature {
 /// content, and the popovers are keyed by cheap identity instead — a revision,
 /// an `Rc` pointer, or a range.
 #[derive(PartialEq, Eq, Default)]
+#[cfg(feature = "code-editor")]
 struct OverlaySignature {
     open: bool,
     revision: u64,
@@ -64,6 +66,7 @@ struct OverlaySignature {
 /// The popovers driven by language features: completion, code actions, hover
 /// and diagnostics. They belong to a code editor, so they are built and synced
 /// by [`OverlayMode`], where the state's kind is concrete.
+#[cfg(feature = "code-editor")]
 pub(crate) struct LspOverlays {
     completion: Entity<CompletionMenu>,
     code_actions: Entity<CodeActionMenu>,
@@ -85,6 +88,7 @@ pub(crate) struct LspOverlays {
 /// Deliberately free of content: only what is needed to decide whether a
 /// popover is shown and whether it changed. The content is read from the state
 /// again, on the frames where it actually did.
+#[cfg(feature = "code-editor")]
 pub(crate) struct LspSnapshot {
     completion: OverlaySignature,
     completion_start: Option<usize>,
@@ -94,6 +98,7 @@ pub(crate) struct LspSnapshot {
     cursor: usize,
 }
 
+#[cfg(feature = "code-editor")]
 impl LspSnapshot {
     fn has_overlay(&self) -> bool {
         self.completion.open
@@ -113,13 +118,16 @@ impl LspSnapshot {
 /// Entirely internal: nothing public is generic over the mode any more.
 pub(crate) trait OverlayMode: InputModeKind + Sized {
     /// Reads the language-feature state this mode shows, if any.
+    #[cfg(feature = "code-editor")]
     fn lsp_snapshot(_state: &InputBaseState<Self>, _cx: &App) -> Option<LspSnapshot> {
         None
     }
 
     /// Installs the routing that lets an open menu consume actions first.
+    #[cfg(feature = "code-editor")]
     fn install_action_handler(_state: &Entity<InputBaseState<Self>>, _cx: &mut App) {}
 
+    #[cfg(feature = "code-editor")]
     fn build_lsp(
         _state: &Entity<InputBaseState<Self>>,
         _window: &mut Window,
@@ -128,6 +136,7 @@ pub(crate) trait OverlayMode: InputModeKind + Sized {
         None
     }
 
+    #[cfg(feature = "code-editor")]
     fn sync_lsp(
         _lsp: &mut LspOverlays,
         _state: &Entity<InputBaseState<Self>>,
@@ -141,7 +150,9 @@ pub(crate) trait OverlayMode: InputModeKind + Sized {
 impl OverlayMode for crate::input::InputMode {}
 impl OverlayMode for crate::input::TextareaMode {}
 
+#[cfg(feature = "code-editor")]
 impl OverlayMode for crate::input::EditorMode {
+    #[cfg(feature = "code-editor")]
     fn install_action_handler(state: &Entity<InputBaseState<Self>>, cx: &mut App) {
         let id = state.entity_id();
         state.update(cx, move |state, _| {
@@ -166,6 +177,7 @@ impl OverlayMode for crate::input::EditorMode {
         });
     }
 
+    #[cfg(feature = "code-editor")]
     fn lsp_snapshot(state: &InputBaseState<Self>, _cx: &App) -> Option<LspSnapshot> {
         let completion = state.completion_menu_state();
         let code_actions = state.code_action_menu_state();
@@ -187,6 +199,7 @@ impl OverlayMode for crate::input::EditorMode {
         })
     }
 
+    #[cfg(feature = "code-editor")]
     fn build_lsp(
         state: &Entity<InputBaseState<Self>>,
         window: &mut Window,
@@ -205,6 +218,7 @@ impl OverlayMode for crate::input::EditorMode {
         })
     }
 
+    #[cfg(feature = "code-editor")]
     fn sync_lsp(
         lsp: &mut LspOverlays,
         state: &Entity<InputBaseState<Self>>,
@@ -300,12 +314,12 @@ pub(super) struct InputOverlays {
 }
 
 impl InputOverlays {
-    #[cfg(test)]
+    #[cfg(all(test, feature = "code-editor"))]
     fn len(&self) -> usize {
         usize::from(self.search.is_some()) + self.floating.len()
     }
 
-    #[cfg(test)]
+    #[cfg(all(test, feature = "code-editor"))]
     fn is_empty(&self) -> bool {
         self.search.is_none() && self.floating.is_empty()
     }
@@ -316,6 +330,7 @@ impl<M: OverlayMode> InputOverlayHost<M> {
         Self {
             search: SearchPanel::new(state.clone(), window, cx),
             search_signature: SearchSignature::default(),
+            #[cfg(feature = "code-editor")]
             lsp: M::build_lsp(&state, window, cx),
         }
     }
@@ -326,6 +341,7 @@ impl<M: OverlayMode> InputOverlayHost<M> {
         window: &mut Window,
         cx: &mut App,
     ) -> InputOverlays {
+        #[cfg(feature = "code-editor")]
         let snapshot = M::lsp_snapshot(state.read(cx), cx);
         let (search_open, replace_mode, activation_revision, search_session) = {
             let state = state.read(cx);
@@ -383,12 +399,17 @@ impl<M: OverlayMode> InputOverlayHost<M> {
             }
         }
 
+        #[cfg(feature = "code-editor")]
         if let (Some(lsp), Some(snapshot)) = (self.lsp.as_mut(), snapshot.as_ref()) {
             M::sync_lsp(lsp, state, snapshot, window, cx);
         }
 
         let search = search_open.then(|| self.search.clone().into_any_element());
+        #[cfg(feature = "code-editor")]
         let mut floating = Vec::with_capacity(4);
+        #[cfg(not(feature = "code-editor"))]
+        let floating = Vec::new();
+        #[cfg(feature = "code-editor")]
         if let (Some(lsp), Some(snapshot)) = (self.lsp.as_ref(), snapshot.as_ref()) {
             if snapshot.completion.open {
                 floating.push(lsp.completion.clone().into_any_element());
@@ -412,11 +433,14 @@ pub(super) fn render_overlays<M: OverlayMode>(
     window: &mut Window,
     cx: &mut App,
 ) -> InputOverlays {
+    #[cfg(feature = "code-editor")]
     M::install_action_handler(state, cx);
     let has_overlay = {
         let state = state.read(cx);
-        state.search_session().open
-            || M::lsp_snapshot(state, cx).is_some_and(|lsp| lsp.has_overlay())
+        let open = state.search_session().open;
+        #[cfg(feature = "code-editor")]
+        let open = open || M::lsp_snapshot(state, cx).is_some_and(|lsp| lsp.has_overlay());
+        open
     };
     if !has_overlay {
         if cx.has_global::<InputOverlayRegistry<M>>() {
@@ -447,7 +471,7 @@ pub(super) fn render_overlays<M: OverlayMode>(
     overlays
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "code-editor"))]
 mod tests {
     use super::*;
     use gpui::{AppContext as _, Render, SharedString, div};

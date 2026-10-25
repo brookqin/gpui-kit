@@ -9,6 +9,7 @@ mod popup_menu;
 pub use app_menu_bar::AppMenuBar;
 pub use context_menu::{ContextMenu, ContextMenuExt, ContextMenuState};
 pub use dropdown_menu::DropdownMenu;
+#[cfg(feature = "code-editor")]
 pub(crate) use menu_item::MenuItemElement;
 pub use popup_menu::{PopupMenu, PopupMenuItem};
 

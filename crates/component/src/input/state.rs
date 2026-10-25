@@ -3,7 +3,9 @@ use gpui::{App, Bounds, Entity, FocusHandle, Focusable as _, Pixels, SharedStrin
 use gpui_base::OtpState;
 use ropey::Rope;
 
-use super::{EditorState, InputState, TextareaState};
+#[cfg(feature = "code-editor")]
+use super::EditorState;
+use super::{InputState, TextareaState};
 
 /// Any input-like state, regardless of which input element renders it.
 ///
@@ -20,6 +22,7 @@ pub enum AnyInputState {
     /// A multi-line [`crate::input::Textarea`] state.
     Textarea(Entity<TextareaState>),
     /// A source-code [`crate::input::Editor`] state.
+    #[cfg(feature = "code-editor")]
     Editor(Entity<EditorState>),
     /// A one-time-code [`crate::input::OtpInput`] state.
     Otp(Entity<OtpState>),
@@ -37,6 +40,7 @@ pub enum AnyInputState {
 pub(crate) enum TextInputState {
     Input(Entity<InputState>),
     Textarea(Entity<TextareaState>),
+    #[cfg(feature = "code-editor")]
     Editor(Entity<EditorState>),
 }
 
@@ -46,6 +50,7 @@ macro_rules! dispatch {
         match $self {
             TextInputState::Input($state) => $body,
             TextInputState::Textarea($state) => $body,
+            #[cfg(feature = "code-editor")]
             TextInputState::Editor($state) => $body,
         }
     };
@@ -131,6 +136,7 @@ impl TextInputState {
             .update(cx, |state, _| state.set_editor_paddings(paddings)))
     }
 
+    #[cfg(feature = "code-editor")]
     pub(crate) fn ensure_highlighter_factory(
         &self,
         factory: gpui_base::input::InputHighlighterFactory,
@@ -236,6 +242,7 @@ impl From<&TextInputState> for AnyInputState {
         match state {
             TextInputState::Input(state) => Self::Input(state.clone()),
             TextInputState::Textarea(state) => Self::Textarea(state.clone()),
+            #[cfg(feature = "code-editor")]
             TextInputState::Editor(state) => Self::Editor(state.clone()),
         }
     }
@@ -253,6 +260,7 @@ impl From<Entity<TextareaState>> for TextInputState {
     }
 }
 
+#[cfg(feature = "code-editor")]
 impl From<Entity<EditorState>> for TextInputState {
     fn from(state: Entity<EditorState>) -> Self {
         Self::Editor(state)
@@ -264,6 +272,7 @@ impl AnyInputState {
         match self {
             Self::Input(state) => Some(state.read(cx).input_bounds()),
             Self::Textarea(state) => Some(state.read(cx).input_bounds()),
+            #[cfg(feature = "code-editor")]
             Self::Editor(state) => Some(state.read(cx).input_bounds()),
             Self::Otp(_) => None,
         }
@@ -277,6 +286,7 @@ impl AnyInputState {
             Self::Textarea(state) => {
                 state.update(cx, |state, cx| state.set_selection_focus(focus, cx))
             }
+            #[cfg(feature = "code-editor")]
             Self::Editor(state) => {
                 state.update(cx, |state, cx| state.set_selection_focus(focus, cx))
             }
@@ -301,8 +311,10 @@ impl AnyInputState {
     }
 
     /// Returns the [`EditorState`], if this is an `Editor` state.
+    #[cfg(feature = "code-editor")]
     pub fn as_editor(&self) -> Option<&Entity<EditorState>> {
         match self {
+            #[cfg(feature = "code-editor")]
             Self::Editor(state) => Some(state),
             _ => None,
         }
@@ -323,6 +335,7 @@ impl AnyInputState {
         match self {
             Self::Input(state) => state.read(cx).value(),
             Self::Textarea(state) => state.read(cx).value(),
+            #[cfg(feature = "code-editor")]
             Self::Editor(state) => state.read(cx).value(),
             Self::Otp(state) => state.read(cx).value().clone(),
         }
@@ -333,6 +346,7 @@ impl AnyInputState {
         match self {
             Self::Input(state) => state.focus_handle(cx),
             Self::Textarea(state) => state.focus_handle(cx),
+            #[cfg(feature = "code-editor")]
             Self::Editor(state) => state.focus_handle(cx),
             Self::Otp(state) => state.focus_handle(cx),
         }
@@ -351,6 +365,7 @@ impl From<Entity<TextareaState>> for AnyInputState {
     }
 }
 
+#[cfg(feature = "code-editor")]
 impl From<Entity<EditorState>> for AnyInputState {
     fn from(state: Entity<EditorState>) -> Self {
         Self::Editor(state)

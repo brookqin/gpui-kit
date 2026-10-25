@@ -13,7 +13,7 @@ mod element_ext;
 pub mod global_state;
 mod icon;
 mod index_path;
-#[cfg(any(feature = "inspector", debug_assertions))]
+#[cfg(all(feature = "code-editor", any(feature = "inspector", debug_assertions)))]
 mod inspector;
 mod root;
 mod sizing;
@@ -111,7 +111,7 @@ pub use gpui_component_macros::icon_named;
 pub use icon::*;
 pub use index_path::IndexPath;
 pub use input::{Rope, RopeExt, RopeLines};
-#[cfg(any(feature = "inspector", debug_assertions))]
+#[cfg(all(feature = "code-editor", any(feature = "inspector", debug_assertions)))]
 pub use inspector::*;
 pub use resizable::{
     ResizablePanel, ResizablePanelEvent, ResizablePanelGroup, ResizableState, h_resizable,
@@ -133,10 +133,11 @@ rust_i18n::i18n!("locales", fallback = "en");
 pub fn init(cx: &mut App) {
     theme::init(cx);
     global_state::init(cx);
-    #[cfg(any(feature = "inspector", debug_assertions))]
+    #[cfg(all(feature = "code-editor", any(feature = "inspector", debug_assertions)))]
     inspector::init(cx);
     root::init(cx);
     gpui_base::init(cx);
+    #[cfg(feature = "code-editor")]
     input::init(cx);
     diff::init(cx);
     date_picker::init(cx);

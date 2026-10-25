@@ -8,7 +8,9 @@ use gpui::{
     Window, div, px, relative,
 };
 
-use crate::button::{Button, ButtonRounded, ButtonVariants as _};
+use crate::button::{Button, ButtonVariants as _};
+#[cfg(feature = "code-editor")]
+use crate::button::ButtonRounded;
 use crate::input::clear_button;
 use crate::native_menu::NativeMenu;
 use crate::spinner::Spinner;
@@ -557,6 +559,7 @@ impl RenderOnce for Input {
         // Which kind of input this registers as follows from the state itself.
         sync_focused_input_registry(&state, window, cx);
 
+        #[cfg(feature = "code-editor")]
         state.ensure_highlighter_factory(crate::highlighter::input_highlighter_factory(), cx);
         state.set_editor_style(
             gpui_base::input::InputEditorStyle {
@@ -566,16 +569,22 @@ impl RenderOnce for Input {
                 border: cx.theme().border,
                 selection: cx.theme().selection,
                 caret: cx.theme().caret,
+                #[cfg(feature = "code-editor")]
                 diagnostics: gpui_base::input::DiagnosticColors {
                     error: cx.theme().highlight_theme.style.status.error(cx),
                     warning: cx.theme().highlight_theme.style.status.warning(cx),
                     info: cx.theme().highlight_theme.style.status.info(cx),
                     hint: cx.theme().highlight_theme.style.status.hint(cx),
                 },
+                #[cfg(feature = "code-editor")]
                 highlight_styles: cx.theme().highlight_theme.clone(),
+                #[cfg(feature = "code-editor")]
                 editor_invisible: cx.theme().highlight_theme.style.editor_invisible,
+                #[cfg(feature = "code-editor")]
                 editor_active_line: cx.theme().highlight_theme.style.editor_active_line,
+                #[cfg(feature = "code-editor")]
                 editor_gutter_background: cx.theme().highlight_theme.style.editor_gutter_background,
+                #[cfg(feature = "code-editor")]
                 fold_icon_renderer: Some(Rc::new(|ix, is_folded| {
                     Button::new(("fold-icon", ix))
                         .ghost()
@@ -590,6 +599,7 @@ impl RenderOnce for Input {
                         .selected(is_folded)
                         .into_any_element()
                 })),
+                ..Default::default()
             },
             cx,
         );
@@ -1167,6 +1177,7 @@ mod tests {
         assert_eq!(*captured.lock().unwrap(), Some((None, true)));
     }
 
+    #[cfg(feature = "code-editor")]
     #[gpui::test]
     fn accessibility_set_value_preserves_exact_editor_text(cx: &mut gpui::TestAppContext) {
         use gpui::{AppContext as _, Render};
@@ -1263,6 +1274,7 @@ mod tests {
         ));
     }
 
+    #[cfg(feature = "code-editor")]
     #[gpui::test]
     fn focused_input_registry_tracks_focus_and_blur(cx: &mut gpui::TestAppContext) {
         use crate::{Root, WindowExt as _};

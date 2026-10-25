@@ -489,6 +489,7 @@ impl LanguageRegistry {
             .insert(lang.to_string().into(), config.clone());
     }
 
+    #[cfg(feature = "code-editor")]
     pub(crate) fn editing_language_name(&self, name: &str) -> SharedString {
         self.languages
             .lock()
@@ -542,9 +543,12 @@ mod registry_compat_tests {
         let mut names = registry.languages();
         names.sort();
         assert_eq!(names, vec!["JSON", "json", "jsonc"]);
-        assert_eq!(registry.editing_language_name("jsonc"), "jsonc");
-        assert_eq!(registry.editing_language_name("JSON"), "JSON");
-        assert_eq!(registry.editing_language_name("pyi"), "python");
+        #[cfg(feature = "code-editor")]
+        {
+            assert_eq!(registry.editing_language_name("jsonc"), "jsonc");
+            assert_eq!(registry.editing_language_name("JSON"), "JSON");
+            assert_eq!(registry.editing_language_name("pyi"), "python");
+        }
     }
 }
 
