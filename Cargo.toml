@@ -161,7 +161,7 @@ ttf-parser = { opt-level = 3 }
 smol = { opt-level = 3 }
 gpui-pre = { opt-level = 3 }
 gpui-fast = { opt-level = 3 }
-gpui-fast-platform = { opt-level = 3, default-features = false }
+gpui-fast-platform = { opt-level = 3 }
 gpui-pre-platform = { opt-level = 3 }
 tree-sitter = { opt-level = 3 }
 gpui-pre-sum-tree = { opt-level = 3 }
