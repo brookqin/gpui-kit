@@ -281,6 +281,7 @@ impl TextSelectionRegistration {
     /// [`TextSelectionEvent::AutoScroll`]. Drag auto-scroll then drives it
     /// directly, measured against its own bounds, instead of synthesizing a
     /// wheel event for the nearest scrollable ancestor.
+    #[cfg(feature = "rich-text")]
     pub(crate) fn with_self_scroll(mut self, self_scroll: bool) -> Self {
         self.self_scroll = self_scroll;
         self
@@ -859,6 +860,7 @@ impl TextSelectionHandle {
     }
 
     // Rich text renders its own selection; retain geometry only for word hit testing.
+    #[cfg(feature = "rich-text")]
     pub(crate) fn set_hit_test_runs(&self, runs: &[TextSelectionRun], cx: &mut App) {
         *self.0.read(cx).runs.borrow_mut() = runs.to_vec();
     }

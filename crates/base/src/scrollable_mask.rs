@@ -1,16 +1,21 @@
+#[cfg(feature = "rich-text")]
+use crate::StyledExt as _;
+#[cfg(feature = "rich-text")]
+use gpui::{
+    InteractiveElement as _, ParentElement as _, StatefulInteractiveElement as _, StyleRefinement,
+    Styled as _, div,
+};
 use std::cell::RefCell;
 use std::rc::Rc;
 
 use gpui::{
     App, Axis, BorderStyle, Bounds, ContentMask, Edges, Element, ElementId, GlobalElementId,
-    Hitbox, Hsla, InteractiveElement as _, IntoElement, IsZero as _, LayoutId, OngoingScroll,
-    PaintQuad, ParentElement as _, Point, Position, ScrollDelta, ScrollHandle, ScrollWheelEvent,
-    StatefulInteractiveElement as _, Style, StyleRefinement, Styled as _, Window, div, px,
-    relative,
+    Hitbox, Hsla, IntoElement, IsZero as _, LayoutId, OngoingScroll, PaintQuad, Point, Position,
+    ScrollDelta, ScrollHandle, ScrollWheelEvent, Style, Window, px, relative,
 };
 use gpui::{Corners, Pixels};
 
-use crate::{AxisExt, OngoingScrollExt as _, ScrollbarHandle, StyledExt as _};
+use crate::{AxisExt, OngoingScrollExt as _, ScrollbarHandle};
 
 /// Default element id for a mask: the call site, so two masks built in
 /// different places never share their per-gesture axis lock.
@@ -26,6 +31,7 @@ fn caller_id() -> ElementId {
 /// scrolling when there is no vertical overflow. This wrapper keeps the visual
 /// clipping and scroll offset, while delegating wheel input to [`ScrollableMask`]
 /// so vertical wheel events can continue bubbling to the parent scroller.
+#[cfg(feature = "rich-text")]
 pub(crate) fn horizontal_scroll_area(
     id: impl Into<ElementId>,
     scroll_handle: &ScrollHandle,
@@ -572,7 +578,7 @@ mod tests {
     use super::*;
     use gpui::{
         Context, IntoElement, ListAlignment, ListState, Render, ScrollDelta, ScrollWheelEvent,
-        TestAppContext, VisualTestContext, Window, div, list, point, px,
+        TestAppContext, VisualTestContext, Window, list, point, px,
     };
 
     #[test]

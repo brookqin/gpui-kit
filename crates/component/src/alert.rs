@@ -3,13 +3,16 @@ use std::rc::Rc;
 use gpui::{
     App, ClickEvent, ElementId, Empty, Hsla, InteractiveElement, IntoElement, ParentElement as _,
     RenderOnce, Role, SharedString, StatefulInteractiveElement, StyleRefinement, Styled, Window,
-    div, prelude::FluentBuilder as _, px, rems, transparent_white,
+    div, prelude::FluentBuilder as _, px, transparent_white,
 };
 
+#[cfg(feature = "rich-text")]
+use crate::text::TextViewStyle;
 use crate::{
-    ActiveTheme as _, Colorize, Icon, IconName, Sizable, Size, StyledExt, h_flex,
-    text::{Text, TextViewStyle},
+    ActiveTheme as _, Colorize, Icon, IconName, Sizable, Size, StyledExt, h_flex, text::Text,
 };
+#[cfg(feature = "rich-text")]
+use gpui::rems;
 
 /// The variant of the [`Alert`].
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
@@ -183,6 +186,12 @@ impl RenderOnce for Alert {
             _ => (cx.theme().radius, px(16.), px(10.), px(12.)),
         };
 
+        #[cfg(feature = "rich-text")]
+        let message = self
+            .message
+            .style(TextViewStyle::default().paragraph_gap(rems(0.2)));
+        #[cfg(not(feature = "rich-text"))]
+        let message = self.message;
         let bg = self.variant.bg(cx);
         let fg = self.variant.fg(cx);
         let border_color = self.variant.border_color(cx);
@@ -226,10 +235,7 @@ impl RenderOnce for Alert {
                                     )
                                 })
                             })
-                            .child(
-                                self.message
-                                    .style(TextViewStyle::default().paragraph_gap(rems(0.2))),
-                            ),
+                            .child(message),
                     ),
             )
             .when_some(self.on_close, |this, on_close| {

@@ -1,6 +1,6 @@
 use gpui::{
     AnyElement, App, Bounds, ClickEvent, Element, ElementId, Entity, GlobalElementId,
-    HighlightStyle, InspectorElementId, IntoElement, LayoutId, Pixels, Refineable as _, RenderOnce,
+    HighlightStyle, InspectorElementId, IntoElement, LayoutId, Pixels, Refineable as _,
     SharedString, StyleRefinement, Styled, Window,
 };
 
@@ -54,6 +54,10 @@ impl Styled for TextView {
 }
 
 impl TextView {
+    pub(crate) fn plain_text(&self, cx: &App) -> SharedString {
+        gpui_base::Text::from(self.inner.clone()).get_text(cx)
+    }
+
     /// Creates a text view rendering an existing [`TextViewState`].
     pub fn new(state: &Entity<TextViewState>) -> Self {
         Self {
@@ -407,56 +411,6 @@ where
     fn setup(self, mut text_view: TextView) -> TextView {
         text_view.inner = text_view.inner.plugin(self);
         text_view
-    }
-}
-
-/// Either a plain string or a rich [`TextView`].
-#[derive(IntoElement, Clone)]
-pub enum Text {
-    String(SharedString),
-    TextView(Box<TextView>),
-}
-impl From<SharedString> for Text {
-    fn from(value: SharedString) -> Self {
-        Self::String(value)
-    }
-}
-impl From<String> for Text {
-    fn from(value: String) -> Self {
-        Self::String(value.into())
-    }
-}
-impl From<&str> for Text {
-    fn from(value: &str) -> Self {
-        Self::String(value.to_string().into())
-    }
-}
-impl From<TextView> for Text {
-    fn from(value: TextView) -> Self {
-        Self::TextView(Box::new(value))
-    }
-}
-impl Text {
-    /// Sets the style for the [`TextView`]. Does nothing for a plain string.
-    pub fn style(self, style: TextViewStyle) -> Self {
-        match self {
-            Self::String(value) => Self::String(value),
-            Self::TextView(view) => Self::TextView(Box::new(view.style(style))),
-        }
-    }
-    pub(crate) fn get_text(&self, cx: &App) -> SharedString {
-        match self {
-            Self::String(value) => value.clone(),
-            Self::TextView(view) => gpui_base::Text::from(view.inner.clone()).get_text(cx),
-        }
-    }
-}
-impl RenderOnce for Text {
-    fn render(self, _: &mut Window, _: &mut App) -> impl IntoElement {
-        match self {
-            Self::String(value) => value.into_any_element(),
-            Self::TextView(view) => view.into_any_element(),
-        }
     }
 }
 

@@ -11,15 +11,19 @@ pub(crate) use diagnostic_popover::*;
 pub(crate) use hover_popover::*;
 
 use gpui::{
-    App, Div, ElementId, InteractiveElement as _, SharedString, Stateful, StyleRefinement,
-    Styled as _, Window, div, px, rems,
+    App, Div, ElementId, InteractiveElement as _, SharedString, Stateful, Styled as _, Window, div,
 };
 
-use crate::{
-    ActiveTheme, ThemeStyled as _,
-    text::{TextView, TextViewStyle},
-};
+use crate::ThemeStyled as _;
 
+#[cfg(feature = "rich-text")]
+use crate::ActiveTheme;
+#[cfg(feature = "rich-text")]
+use crate::text::{TextView, TextViewStyle};
+#[cfg(feature = "rich-text")]
+use gpui::{StyleRefinement, px, rems};
+
+#[cfg(feature = "rich-text")]
 pub(super) fn render_markdown(
     id: impl Into<ElementId>,
     markdown: impl Into<SharedString>,
@@ -54,4 +58,14 @@ pub(super) fn editor_popover(id: impl Into<ElementId>, cx: &App) -> Stateful<Div
         .shadow_md()
         .text_xs()
         .p_1()
+}
+
+#[cfg(not(feature = "rich-text"))]
+pub(super) fn render_markdown(
+    _: impl Into<ElementId>,
+    text: impl Into<SharedString>,
+    _: &mut Window,
+    _: &mut App,
+) -> SharedString {
+    text.into()
 }

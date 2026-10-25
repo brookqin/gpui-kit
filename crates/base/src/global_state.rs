@@ -1,14 +1,19 @@
 #[cfg(not(target_family = "wasm"))]
 use std::time::Instant;
 use std::{
-    cell::{Cell, RefCell},
+    cell::Cell,
     rc::{Rc, Weak},
 };
 #[cfg(target_family = "wasm")]
 use web_time::Instant;
 
-use gpui::{App, Entity, Global, OwnedMenu};
+#[cfg(feature = "rich-text")]
+use gpui::Entity;
+use gpui::{App, Global, OwnedMenu};
+#[cfg(feature = "rich-text")]
+use std::cell::RefCell;
 
+#[cfg(feature = "rich-text")]
 use crate::text::TextViewState;
 
 /// Holds the deferred interaction context open for as long as it is alive.
@@ -26,6 +31,7 @@ pub struct GlobalState {
     /// The text views being prepainted or painted, innermost last. Kept
     /// apart from what views read of this global: pushing and popping as
     /// they draw is not a change of it.
+    #[cfg(feature = "rich-text")]
     text_view_state_stack: RefCell<Vec<Entity<TextViewState>>>,
     /// The order the next selectable text painted this frame takes, which
     /// changes as text paints without changing this global.
@@ -43,6 +49,7 @@ impl GlobalState {
             app_menus: Vec::new(),
             deferred_popovers: Vec::new(),
             suppress_text_selection: false,
+            #[cfg(feature = "rich-text")]
             text_view_state_stack: RefCell::new(Vec::new()),
             selection_document_order: Cell::new(1),
             last_touch: None,
@@ -101,14 +108,17 @@ impl GlobalState {
         cx.global_mut::<Self>()
     }
 
+    #[cfg(feature = "rich-text")]
     pub(crate) fn text_view_state(&self) -> Option<Entity<TextViewState>> {
         self.text_view_state_stack.borrow().last().cloned()
     }
 
+    #[cfg(feature = "rich-text")]
     pub(crate) fn push_text_view_state(&self, state: Entity<TextViewState>) {
         self.text_view_state_stack.borrow_mut().push(state);
     }
 
+    #[cfg(feature = "rich-text")]
     pub(crate) fn pop_text_view_state(&self) {
         self.text_view_state_stack.borrow_mut().pop();
     }
@@ -118,6 +128,7 @@ impl GlobalState {
         self.selection_document_order.set(1);
     }
 
+    #[cfg(feature = "rich-text")]
     pub(crate) fn next_selection_document_order(&self) -> u64 {
         let order = self.selection_document_order.get();
         self.selection_document_order.set(order.wrapping_add(1));

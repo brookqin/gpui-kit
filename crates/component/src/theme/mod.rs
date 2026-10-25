@@ -474,6 +474,7 @@ impl Theme {
         let theme = Theme::global(cx).clone();
         let base_theme = theme.base_theme();
         cx.set_global(base_theme);
+        #[cfg(feature = "rich-text")]
         crate::text::install_text_view_defaults(&theme, cx);
     }
 

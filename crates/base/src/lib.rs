@@ -75,7 +75,10 @@ mod styled;
 mod switch;
 mod table;
 mod tabs;
+#[cfg(feature = "rich-text")]
 pub mod text;
+mod text_value;
+pub use text_value::Text;
 mod text_boundary;
 mod text_selection;
 mod theme;
@@ -186,11 +189,12 @@ pub use switch::{
 };
 pub use table::{Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow};
 pub use tabs::{Tab, TabStyles, Tabs};
+#[cfg(feature = "rich-text")]
 pub use text::{
     InlineElement, InlineRenderContext, MarkdownExtensions, MarkdownNode, MarkdownParseContext,
     MarkdownPlugin, RangeHighlight, RangeHighlightError, RenderedText, SelectionFormat, TableData,
-    Text, TextView, TextViewDefaults, TextViewMotion, TextViewPlugin, TextViewState, TextViewStyle,
-    html, markdown, markdown_ast,
+    TextView, TextViewDefaults, TextViewMotion, TextViewPlugin, TextViewState, TextViewStyle, html,
+    markdown, markdown_ast,
 };
 pub use text_selection::{
     TextSelection, TextSelectionContentKey, TextSelectionCoverage, TextSelectionEndpoint,
@@ -252,6 +256,7 @@ pub fn init(cx: &mut App) {
     time_field::init(cx);
     input::init(cx);
     tree::init(cx);
+    #[cfg(feature = "rich-text")]
     text::init(cx);
     root::init(cx);
 }

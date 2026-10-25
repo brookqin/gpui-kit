@@ -15,7 +15,8 @@ edition.workspace = true
 doctest = false
 
 [features]
-default = ["gpui-pre"]
+default = ["gpui-pre", "rich-text"]
+rich-text = ["gpui-base/rich-text", "dep:markdown"]
 gpui-pre = ["dep:gpui", "gpui-base/gpui-pre", "gpui-kit-assets/gpui-pre"]
 gpui-fast = ["dep:gpui-fast", "gpui-base/gpui-fast", "gpui-kit-assets/gpui-fast"]
 test-support = ["gpui?/test-support", "gpui-base/test-support", "gpui-fast?/test-support"]
@@ -142,7 +143,7 @@ smallvec.workspace = true
 sum-tree.workspace = true
 tracing.workspace = true
 log.workspace = true
-markdown = { version = "1.0.0", features = ["serde"] }
+markdown = { version = "1.0.0", features = ["serde"], optional = true }
 
 enum-iterator = "2.1.0"
 itertools = "0.13.0"
