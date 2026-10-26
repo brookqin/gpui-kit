@@ -72,9 +72,9 @@ gpui_web = { package = "gpui-pre-web", version = "=0.3.9" }
 # Fast is optional; existing crates select it through their gpui-fast feature.
 # Explicit package fields make Cargo use these dependency keys as Rust crate names;
 # the packages declare the same library names as the pre backend.
-gpui-fast = { package = "gpui-fast", version = "0.1.10", default-features = false, features = ["windows-manifest-provided-by-host", "font-kit", "wayland", "x11"] }
-gpui-fast-platform = { package = "gpui-fast-platform", version = "0.1.10", features = ["font-kit", "x11", "wayland", "runtime_shaders"], default-features = false }
-gpui-fast-web = { package = "gpui-fast-web", version = "0.1.10", default-features = false }
+gpui-fast = { package = "gpui-fast", version = "0.1.10", git = "https://github.com/brookqin/gpui-fast.git", rev = "6218af7ad3f7dcb3b6a565855c7ddeb4a8a5815f", default-features = false, features = ["windows-manifest-provided-by-host", "font-kit", "wayland", "x11"] }
+gpui-fast-platform = { package = "gpui-fast-platform", version = "0.1.10", git = "https://github.com/brookqin/gpui-fast.git", rev = "6218af7ad3f7dcb3b6a565855c7ddeb4a8a5815f", features = ["font-kit", "x11", "wayland", "runtime_shaders"], default-features = false }
+gpui-fast-web = { package = "gpui-fast-web", version = "0.1.10", git = "https://github.com/brookqin/gpui-fast.git", rev = "6218af7ad3f7dcb3b6a565855c7ddeb4a8a5815f", default-features = false }
 gpui_macros = { package = "gpui-pre-macros", version = "=0.3.9" }
 reqwest_client = { package = "gpui-pre-reqwest-client", version = "=0.3.9" }
 sum-tree = { package = "gpui-pre-sum-tree", version = "=0.3.9" }
