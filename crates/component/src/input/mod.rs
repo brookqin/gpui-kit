@@ -53,13 +53,13 @@ mod state;
 mod textarea;
 #[cfg(feature = "code-editor")]
 pub use editor::Editor;
+pub use gpui_base::input::Position;
 pub use gpui_base::input::{
     AutoClosingPair, BracketPair, IndentationRules, LanguageProvider, SyntaxContext,
     SyntaxContextProvider, set_language_config, set_language_provider,
 };
 pub use group::*;
 pub use input::*;
-pub use gpui_base::input::Position;
 pub use number_input::{NumberInput, NumberInputEvent, NumberStep, StepAction};
 pub use otp_input::*;
 pub use state::AnyInputState;

@@ -1,9 +1,9 @@
+#[cfg(feature = "theme-loader")]
+use crate::ThemeSet;
 use crate::{Theme, ThemeColor, ThemeConfig, ThemeMode, highlighter::HighlightTheme};
 #[allow(unused)]
 use anyhow::Result;
 use gpui::{App, Global, SharedString};
-#[cfg(feature = "theme-loader")]
-use crate::ThemeSet;
 use std::{
     collections::HashMap,
     path::PathBuf,
@@ -299,7 +299,11 @@ impl ThemeRegistry {
 mod builtin_theme_tests {
     #[test]
     fn typed_themes_match_json_on_this_backend() {
-        let original: crate::ThemeSet = serde_json::from_str(include_str!("default-theme.json")).unwrap();
-        assert_eq!(serde_json::to_value(super::builtin_themes()).unwrap(), serde_json::to_value(original.themes).unwrap());
+        let original: crate::ThemeSet =
+            serde_json::from_str(include_str!("default-theme.json")).unwrap();
+        assert_eq!(
+            serde_json::to_value(super::builtin_themes()).unwrap(),
+            serde_json::to_value(original.themes).unwrap()
+        );
     }
 }

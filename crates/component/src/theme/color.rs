@@ -344,13 +344,15 @@ impl Colorize for Hsla {
 }
 
 include!("builtin_palette.rs");
-pub(crate) static DEFAULT_COLORS: once_cell::sync::Lazy<ShadcnColors> = once_cell::sync::Lazy::new(builtin_palette);
+pub(crate) static DEFAULT_COLORS: once_cell::sync::Lazy<ShadcnColors> =
+    once_cell::sync::Lazy::new(builtin_palette);
 
 #[cfg(test)]
 mod builtin_palette_tests {
     #[test]
     fn typed_palette_matches_json() {
-        let original: super::ShadcnColors = serde_json::from_str(include_str!("default-colors.json")).unwrap();
+        let original: super::ShadcnColors =
+            serde_json::from_str(include_str!("default-colors.json")).unwrap();
         assert_eq!(super::builtin_palette(), original);
     }
 }

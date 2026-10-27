@@ -4,7 +4,7 @@ The facade keeps compatible defaults. A small browser application can select a
 single engine and explicitly enable its platform and presentation layers:
 
 ```toml
-gpui-kit = { version = "0.8.0", default-features = false, features = ["gpui-fast", "component", "assets", "webgpu"] }
+gpui-kit = { version = "0.8.1", default-features = false, features = ["gpui-fast", "component", "assets", "webgpu"] }
 ```
 
 Select `webgl` instead, or both, for the corresponding compiled renderer set.
