@@ -4004,7 +4004,7 @@ dependencies = [
 [[package]]
 name = "gpui-fast"
 version = "0.1.12"
-source = "git+https://github.com/brookqin/gpui-fast.git?rev=d1716c57efb2b3e37d87d5b2429769e577f03c99#d1716c57efb2b3e37d87d5b2429769e577f03c99"
+source = "git+https://github.com/brookqin/gpui-fast.git?rev=5e529eb620653ca0391a3208c4f1ecc38d5da16d#5e529eb620653ca0391a3208c4f1ecc38d5da16d"
 dependencies = [
  "accesskit",
  "anyhow",
@@ -4075,7 +4075,7 @@ dependencies = [
 [[package]]
 name = "gpui-fast-apple"
 version = "0.1.12"
-source = "git+https://github.com/brookqin/gpui-fast.git?rev=d1716c57efb2b3e37d87d5b2429769e577f03c99#d1716c57efb2b3e37d87d5b2429769e577f03c99"
+source = "git+https://github.com/brookqin/gpui-fast.git?rev=5e529eb620653ca0391a3208c4f1ecc38d5da16d#5e529eb620653ca0391a3208c4f1ecc38d5da16d"
 dependencies = [
  "anyhow",
  "async-task",
@@ -4116,7 +4116,7 @@ dependencies = [
 [[package]]
 name = "gpui-fast-linux"
 version = "0.1.12"
-source = "git+https://github.com/brookqin/gpui-fast.git?rev=d1716c57efb2b3e37d87d5b2429769e577f03c99#d1716c57efb2b3e37d87d5b2429769e577f03c99"
+source = "git+https://github.com/brookqin/gpui-fast.git?rev=5e529eb620653ca0391a3208c4f1ecc38d5da16d#5e529eb620653ca0391a3208c4f1ecc38d5da16d"
 dependencies = [
  "accesskit",
  "accesskit_unix",
@@ -4160,7 +4160,7 @@ dependencies = [
 [[package]]
 name = "gpui-fast-macos"
 version = "0.1.12"
-source = "git+https://github.com/brookqin/gpui-fast.git?rev=d1716c57efb2b3e37d87d5b2429769e577f03c99#d1716c57efb2b3e37d87d5b2429769e577f03c99"
+source = "git+https://github.com/brookqin/gpui-fast.git?rev=5e529eb620653ca0391a3208c4f1ecc38d5da16d#5e529eb620653ca0391a3208c4f1ecc38d5da16d"
 dependencies = [
  "accesskit",
  "accesskit_macos",
@@ -4198,7 +4198,7 @@ dependencies = [
 [[package]]
 name = "gpui-fast-macros"
 version = "0.1.12"
-source = "git+https://github.com/brookqin/gpui-fast.git?rev=d1716c57efb2b3e37d87d5b2429769e577f03c99#d1716c57efb2b3e37d87d5b2429769e577f03c99"
+source = "git+https://github.com/brookqin/gpui-fast.git?rev=5e529eb620653ca0391a3208c4f1ecc38d5da16d#5e529eb620653ca0391a3208c4f1ecc38d5da16d"
 dependencies = [
  "heck 0.5.0",
  "proc-macro2",
@@ -4209,7 +4209,7 @@ dependencies = [
 [[package]]
 name = "gpui-fast-platform"
 version = "0.1.12"
-source = "git+https://github.com/brookqin/gpui-fast.git?rev=d1716c57efb2b3e37d87d5b2429769e577f03c99#d1716c57efb2b3e37d87d5b2429769e577f03c99"
+source = "git+https://github.com/brookqin/gpui-fast.git?rev=5e529eb620653ca0391a3208c4f1ecc38d5da16d#5e529eb620653ca0391a3208c4f1ecc38d5da16d"
 dependencies = [
  "anyhow",
  "console_error_panic_hook",
@@ -4225,7 +4225,7 @@ dependencies = [
 [[package]]
 name = "gpui-fast-web"
 version = "0.1.12"
-source = "git+https://github.com/brookqin/gpui-fast.git?rev=d1716c57efb2b3e37d87d5b2429769e577f03c99#d1716c57efb2b3e37d87d5b2429769e577f03c99"
+source = "git+https://github.com/brookqin/gpui-fast.git?rev=5e529eb620653ca0391a3208c4f1ecc38d5da16d#5e529eb620653ca0391a3208c4f1ecc38d5da16d"
 dependencies = [
  "anyhow",
  "async-channel",
@@ -4254,7 +4254,7 @@ dependencies = [
 [[package]]
 name = "gpui-fast-wgpu"
 version = "0.1.12"
-source = "git+https://github.com/brookqin/gpui-fast.git?rev=d1716c57efb2b3e37d87d5b2429769e577f03c99#d1716c57efb2b3e37d87d5b2429769e577f03c99"
+source = "git+https://github.com/brookqin/gpui-fast.git?rev=5e529eb620653ca0391a3208c4f1ecc38d5da16d#5e529eb620653ca0391a3208c4f1ecc38d5da16d"
 dependencies = [
  "anyhow",
  "bytemuck",
@@ -4283,7 +4283,7 @@ dependencies = [
 [[package]]
 name = "gpui-fast-windows"
 version = "0.1.12"
-source = "git+https://github.com/brookqin/gpui-fast.git?rev=d1716c57efb2b3e37d87d5b2429769e577f03c99#d1716c57efb2b3e37d87d5b2429769e577f03c99"
+source = "git+https://github.com/brookqin/gpui-fast.git?rev=5e529eb620653ca0391a3208c4f1ecc38d5da16d#5e529eb620653ca0391a3208c4f1ecc38d5da16d"
 dependencies = [
  "accesskit",
  "accesskit_windows",
