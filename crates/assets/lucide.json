@@ -2,5 +2,12 @@
   "version": "1.43.0",
   "archive_url": "https://api.github.com/repos/lucide-icons/lucide/tarball/1.43.0",
   "sha256": "d57793fa27a720cf487249940c8d68544c7a0d2ed2a046baad65012a902536ed",
-  "icon_count": 1818
+  "icon_count": 1818,
+  "supplemental_icons": [
+    {
+      "name": "square-padding-left",
+      "source": "https://github.com/lucide-icons/lucide/blob/main/icons/square-padding-left.svg",
+      "blob_sha": "0a03a5a4133eb38f44aae45b95a0066de758a373"
+    }
+  ]
 }
