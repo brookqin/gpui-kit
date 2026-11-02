@@ -58,3 +58,49 @@ Strict nightly Clippy for the trimmed WebGL configuration stops at
 byte-for-byte upstream `v0.8.1`; the sync does not change its cache-read logic.
 Clippy is therefore not recorded as passing. The nightly Cargo version also
 reports existing manifest inheritance/unused-dependency warnings.
+
+## GPUI Fast 0.1.13 integration (2026-11-02)
+
+The stable line merges upstream Fast `v0.1.13`
+(`cd20d121007002c30b5e37c2792e7fe3a6c9c4ca`) while preserving the fork's
+additive runtime features. Kit pins the regenerated Git packages at
+`fea317d7905f4de15799309c823cfa5b0b4d058b`; the default engine and all shared
+`gpui-pre` snapshot packages advance together to exactly `0.3.11`. The custom
+wgpu revision is unchanged. Publish the Fast revision before publishing this
+Kit revision so a fresh remote consumer can resolve the dependency.
+
+Upstream makes `WindowTextSystem` window-local and non-`Send`/non-`Sync`.
+Parsed rich-text tables can cross the background-parser boundary, so their
+column cache now keeps a weak reference to the shared `TextSystem` and records
+the window ID separately. This preserves window isolation and font-system
+identity without moving the window-local layout system across threads. The
+public Kit API is unchanged by this cache adaptation. Fast's native video
+renderer is also adapted to upstream's `objc2-metal` migration, including
+command-buffer completion ownership of frames and CoreVideo textures.
+
+### Validation and limits
+
+- macOS checks pass for the default backend and both trimmed and full Fast
+  configurations (Rust 1.99.1). The exact pinned Git dependency also resolves
+  and checks without Cargo source patches; before publication its objects
+  were supplied from the local Fast repository using a process-local Git URL
+  rewrite, leaving the lockfile's canonical remote source unchanged.
+- WASM checks pass for trimmed WebGL and full Fast WebGPU/WebGL configurations
+  (nightly 2026-10-20).
+- All three existing `table_columns_cache` tests pass with both Fast and the
+  default backend. These are focused tests, not the complete Kit test suite.
+- Fast's upstream-hook checker reports no violations, and all five release
+  script tests pass. Generated distribution packages are committed.
+- A downstream viewer passes 101 library tests and builds native macOS and
+  browser UI/worker binaries. Native runtime smoke covers video rendering,
+  transformed video, seeking, pause/resume, PiP return and toolbar clipping.
+  Chromium CDP composition tests cover first-key ordering, Chinese commit,
+  cancellation and English editing; this does not validate a physical OS IME.
+  Chromium media tests also pass in Copy, External and default modes, covering
+  seek, keyboard controls, accessibility actions, PiP return, fullscreen and
+  denied/unavailable PiP. The test harness was adjusted for the current rate
+  control and centered PiP-return button; real assistive technology was not tested.
+
+Windows/Linux real-window behavior, other browsers, physical input methods
+and the full upstream/Kit test suites remain unverified. These results are
+local integration evidence rather than a claim of complete platform acceptance.

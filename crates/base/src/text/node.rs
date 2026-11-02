@@ -2021,7 +2021,10 @@ impl std::fmt::Debug for TableColumnWidthsCache {
 }
 
 struct TableColumnWidths {
-    text_system: Weak<gpui::WindowTextSystem>,
+    // Parsed tables cross the background parser boundary. Keep only the shared
+    // font system here; the window-local layout system is neither Send nor Sync.
+    text_system: Weak<gpui::TextSystem>,
+    window_id: gpui::WindowId,
     /// The styles the header row and the body rows render with.
     text_styles: TableTextStyles,
     rem_size: Pixels,
@@ -3341,6 +3344,7 @@ fn measure_table_columns(
             .as_ref()
             .filter(|cached| {
                 cached.widths.len() == col_count
+                    && cached.window_id == window.window_handle().window_id()
                     && cached.text_styles == text_styles
                     && cached.rem_size == rem_size
                     && cached.mono_family == mono_family
@@ -3357,6 +3361,7 @@ fn measure_table_columns(
             measure_table_text_columns(table, col_count, &text_styles, node_cx, window, cx);
         let measured = Arc::new(TableColumnWidths {
             text_system: Arc::downgrade(window.text_system()),
+            window_id: window.window_handle().window_id(),
             text_styles: text_styles.clone(),
             rem_size,
             mono_family,
