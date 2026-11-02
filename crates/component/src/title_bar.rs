@@ -42,6 +42,7 @@ fn default_title_bar_background(title_bar: Hsla, background: Hsla) -> Background
 #[derive(IntoElement)]
 pub struct TitleBar {
     style: StyleRefinement,
+    fullscreen_padding: bool,
     children: SmallVec<[AnyElement; 1]>,
     on_close_window: Option<Rc<Box<dyn Fn(&ClickEvent, &mut Window, &mut App)>>>,
 }
@@ -51,9 +52,18 @@ impl TitleBar {
     pub fn new() -> Self {
         Self {
             style: StyleRefinement::default(),
+            fullscreen_padding: true,
             children: SmallVec::new(),
             on_close_window: None,
         }
+    }
+
+    /// Whether to add the default leading content padding in native fullscreen.
+    /// Defaults to true. Disable when the child already supplies its own padding.
+    /// This does not change the title bar's outer padding or window controls.
+    pub fn fullscreen_padding(mut self, enabled: bool) -> Self {
+        self.fullscreen_padding = enabled;
+        self
     }
 
     /// Returns the default title bar options for compatible with the [`crate::TitleBar`].
@@ -382,7 +392,9 @@ impl RenderOnce for TitleBar {
                         .flex_1()
                         .when(!is_web, |this| {
                             this.window_control_area(WindowControlArea::Drag)
-                                .when(window.is_fullscreen(), |this| this.pl_3())
+                                .when(window.is_fullscreen() && self.fullscreen_padding, |this| {
+                                    this.pl_3()
+                                })
                                 .when(is_linux && is_client_decorated, |this| {
                                     this.child(
                                         div()
@@ -413,6 +425,12 @@ impl RenderOnce for TitleBar {
 mod tests {
     use super::*;
     use gpui::{Rgba, linear_color_stop, linear_gradient};
+
+    #[test]
+    fn test_title_bar_builder() {
+        assert!(TitleBar::new().fullscreen_padding);
+        assert!(!TitleBar::new().fullscreen_padding(false).fullscreen_padding);
+    }
 
     #[test]
     fn test_default_title_bar_background() {

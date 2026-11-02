@@ -158,6 +158,7 @@ WindowOptions {
 | `on_close_window(fn)` | Custom close window handler (Linux only) |
 | `title_bar_options()` | Get default titlebar options for window  |
 | `window_options()`    | Get default window options for the title bar |
+| `fullscreen_padding(bool)` | Add leading content padding in native fullscreen (default: true); disable when the child supplies its own padding |
 
 ### Window Configuration
 

@@ -155,6 +155,7 @@ WindowOptions {
 | `on_close_window(fn)` | 自定义关闭行为，仅 Linux 有效 |
 | `title_bar_options()` | 获取窗口可用的默认标题栏配置 |
 | `window_options()` | 获取标题栏配套的默认窗口配置 |
+| `fullscreen_padding(bool)` | 原生全屏时添加内容区左侧留白，默认开启；子内容自行提供内边距时可关闭 |
 
 ### 窗口配置项
 
